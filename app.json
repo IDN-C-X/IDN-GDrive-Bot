@@ -1,0 +1,53 @@
+{
+  "name": "IDN-GDrive-Bot",
+  "description": "Telegram/Direct Links to GDrive Uploader Bot",
+  "repository": "https://github.com/IDN-C-X/IDN-GDrive-Bot",
+  "logo": "https://telegra.ph/file/fe64e5b1ebecba97ca1dd.png",
+  "keywords": ["Telegram", "Google Drive", "uploader"],
+  "env": {
+    "ENV": {
+      "description": "Set it to anything to enable configuration by environment variables.",
+      "value": "ANYTHING"
+    },
+    "BOT_TOKEN": {
+      "description": "Get it from @BotFather"
+    },
+    "APP_ID": {
+      "description": "Your API_ID, Get it from https://my.telegram.org/apps"
+    },
+    "API_HASH": {
+      "description": "Your API_HASH, Get it from https://my.telegram.org/apps"
+    },
+    "SUDO_USERS": {
+      "description": "List of sudo users ids, seperated by space.",
+      "value": ""
+    },
+    "SUPPORT_CHAT_LINK": {
+      "description": "Support Chat link in valid url format.",
+      "value": ""
+    },
+    "DOWNLOAD_DIRECTORY": {
+      "description": "Custom path for downloads. Must end with a forward slash.",
+      "value": "./downloads/"
+    },
+    "G_DRIVE_CLIENT_ID": {
+      "description": "Google Drive Client ID from Google Cloud Platform",
+      "value": ""
+    },
+    "G_DRIVE_CLIENT_SECRET": {
+      "description": "Google Drive Client Secret from Google Cloud Platform",
+      "value": ""
+    }
+  },
+   "addons": [{
+    "plan": "heroku-postgresql"
+  }],
+   "buildpacks": [
+    {
+      "url": "heroku/python"
+    },
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    }
+  ]
+}
