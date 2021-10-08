@@ -61,4 +61,4 @@ python3 -m gdrive
 ## Copyright & License
 - Copyright (©) 2021 by [IDN-C-X](https://github.com/IDN-C-X)
 - Modified by [UserLazy](https://github.com/UserLazy)
-- Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 05 October 2021](./LICENSE)
+- Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 05 October 2021](./LICENSE).
