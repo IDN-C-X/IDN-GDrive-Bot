@@ -67,17 +67,17 @@ class GoogleDrive:
   @retry(wait=wait_exponential(multiplier=2, min=3, max=6), stop=stop_after_attempt(5),
     retry=retry_if_exception_type(HttpError), before=before_log(LOGGER, logging.DEBUG))
   def copyFile(self, file_id, dest_id):
-      body = {'parents': [dest_id]}
-      try:
-          res = self.__service.files().copy(supportsAllDrives=True,fileId=file_id,body=body).execute()
-          return res
-      except HttpError as err:
-          if err.resp.get('content-type', '').startswith('application/json'):
-              reason = json.loads(err.content).get('error').get('errors')[0].get('reason')
-              if reason == 'dailyLimitExceeded':
-                 raise IndexError('LimitExceeded')
-              else:
-                 raise err
+    body = {'parents': [dest_id]}
+    try:
+      return (self.__service.files().copy(
+          supportsAllDrives=True, fileId=file_id, body=body).execute())
+    except HttpError as err:
+        if err.resp.get('content-type', '').startswith('application/json'):
+            reason = json.loads(err.content).get('error').get('errors')[0].get('reason')
+            if reason == 'dailyLimitExceeded':
+               raise IndexError('LimitExceeded')
+            else:
+               raise err
 
 
   def cloneFolder(self, name, local_path, folder_id, parent_id):
@@ -105,14 +105,13 @@ class GoogleDrive:
   @retry(wait=wait_exponential(multiplier=2, min=3, max=6), stop=stop_after_attempt(5),
     retry=retry_if_exception_type(HttpError), before=before_log(LOGGER, logging.DEBUG))
   def create_directory(self, directory_name):
-          file_metadata = {
-              "name": directory_name,
-              "mimeType": self.__G_DRIVE_DIR_MIME_TYPE
-          }
-          file_metadata["parents"] = [self.__parent_id]
-          file = self.__service.files().create(supportsTeamDrives=True, body=file_metadata).execute()
-          file_id = file.get("id")
-          return file_id
+    file_metadata = {
+        'name': directory_name,
+        'mimeType': self.__G_DRIVE_DIR_MIME_TYPE,
+        'parents': [self.__parent_id],
+    }
+    file = self.__service.files().create(supportsTeamDrives=True, body=file_metadata).execute()
+    return file.get("id")
 
   def clone(self, link):
     self.transferred_size = 0
@@ -141,36 +140,36 @@ class GoogleDrive:
   @retry(wait=wait_exponential(multiplier=2, min=3, max=6), stop=stop_after_attempt(5),
     retry=retry_if_exception_type(HttpError), before=before_log(LOGGER, logging.DEBUG))
   def upload_file(self, file_path, mimeType=None):
-      mime_type = mimeType if mimeType else guess_type(file_path)[0]
-      mime_type = mime_type if mime_type else "text/plain"
-      media_body = MediaFileUpload(
-          file_path,
-          mimetype=mime_type,
-          chunksize=150*1024*1024,
-          resumable=True
-      )
-      filename = os.path.basename(file_path)
-      filesize = humanbytes(os.path.getsize(file_path))
-      body = {
-          "name": filename,
-          "description": "Uploaded by https://t.me/IDNCoder",
-          "mimeType": mime_type,
-      }
-      body["parents"] = [self.__parent_id]
-      LOGGER.info(f'Upload: {file_path}')
-      try:
-        uploaded_file = self.__service.files().create(body=body, media_body=media_body, fields='id', supportsTeamDrives=True).execute()
-        file_id = uploaded_file.get('id')
-        return Messages.UPLOADED_SUCCESSFULLY.format(filename, self.__G_DRIVE_BASE_DOWNLOAD_URL.format(file_id), filesize)
-      except HttpError as err:
-        if err.resp.get('content-type', '').startswith('application/json'):
-          reason = json.loads(err.content).get('error').get('errors')[0].get('reason')
-          if reason == 'userRateLimitExceeded' or reason == 'dailyLimitExceeded':
-            return Messages.RATE_LIMIT_EXCEEDED_MESSAGE
-          else:
-            return f"**ERROR:** {reason}"
-      except Exception as e:
-        return f"**ERROR:** ```{e}```"
+    mime_type = mimeType or guess_type(file_path)[0]
+    mime_type = mime_type or "text/plain"
+    media_body = MediaFileUpload(
+        file_path,
+        mimetype=mime_type,
+        chunksize=150*1024*1024,
+        resumable=True
+    )
+    filename = os.path.basename(file_path)
+    filesize = humanbytes(os.path.getsize(file_path))
+    body = {
+        'name': filename,
+        'description': 'Uploaded by https://t.me/IDNCoder',
+        'mimeType': mime_type,
+        'parents': [self.__parent_id],
+    }
+    LOGGER.info(f'Upload: {file_path}')
+    try:
+      uploaded_file = self.__service.files().create(body=body, media_body=media_body, fields='id', supportsTeamDrives=True).execute()
+      file_id = uploaded_file.get('id')
+      return Messages.UPLOADED_SUCCESSFULLY.format(filename, self.__G_DRIVE_BASE_DOWNLOAD_URL.format(file_id), filesize)
+    except HttpError as err:
+      if err.resp.get('content-type', '').startswith('application/json'):
+        reason = json.loads(err.content).get('error').get('errors')[0].get('reason')
+        if reason in ['userRateLimitExceeded', 'dailyLimitExceeded']:
+          return Messages.RATE_LIMIT_EXCEEDED_MESSAGE
+        else:
+          return f"**ERROR:** {reason}"
+    except Exception as e:
+      return f"**ERROR:** ```{e}```"
 
   @retry(wait=wait_exponential(multiplier=2, min=3, max=6), stop=stop_after_attempt(5),
     retry=retry_if_exception_type(HttpError), before=before_log(LOGGER, logging.DEBUG))
