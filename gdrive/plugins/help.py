@@ -34,13 +34,13 @@ def help_answer(c, callback_query):
 
 
 def map(pos):
-    if(pos==1):
-        button = [
+    if (pos==1):
+        return [
             [InlineKeyboardButton(text = '-->', callback_data = "help+2")]
         ]
-    elif(pos==len(tr.HELP_MSG)-1):
+    elif pos==len(tr.HELP_MSG)-1:
 
-        button = [
+        return [
             [
              InlineKeyboardButton(text = 'Support Chat', url = SUPPORT_CHAT_LINK),
              InlineKeyboardButton(text = 'Channel Update', url = "t.me/IDNCoder")
@@ -49,10 +49,9 @@ def map(pos):
 
         ]
     else:
-        button = [
+        return [
             [
                 InlineKeyboardButton(text = '<--', callback_data = f"help+{pos-1}"),
                 InlineKeyboardButton(text = '-->', callback_data = f"help+{pos+1}")
             ],
         ]
-    return button
