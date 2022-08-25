@@ -34,6 +34,6 @@ def _send_log(client: Client, message: Message):
 def _restart(client: Client, message: Message):
   shutil.rmtree(DOWNLOAD_DIRECTORY)
   LOGGER.info('Deleted DOWNLOAD_DIRECTORY successfully.')
-  message.reply_text('**♻️Restarted Successfully !**', quote=True)
+  await message.reply_text('**♻️Restarted Successfully !**', quote=True)
   LOGGER.info(f'{message.from_user.id}: Restarting...')
   execl(executable, executable, "-m", "gdrive")
