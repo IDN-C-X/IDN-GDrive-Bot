@@ -1,14 +1,17 @@
+"""gdrive-bot main init."""
+
 import os
 import logging
 
-from pyrogram import Client
+from pyrogram.client import Client
+from pyrogram.enums import ParseMode
 
 from gdrive import (
   APP_ID,
   API_HASH,
   BOT_TOKEN,
   DOWNLOAD_DIRECTORY
-  )
+)
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -25,14 +28,15 @@ if __name__ == "__main__":
         root="gdrive/plugins"
     )
     app = Client(
-        "IDN-GDrive-Bot",
+        name="IDN-GDrive-Bot",
         bot_token=BOT_TOKEN,
         api_id=APP_ID,
         api_hash=API_HASH,
         plugins=plugins,
-        parse_mode="markdown",
-        workdir=DOWNLOAD_DIRECTORY
+        parse_mode=ParseMode.MARKDOWN,
+        workdir=DOWNLOAD_DIRECTORY,
+        in_memory=True
     )
-    LOGGER.info('Starting Bot !')
+    LOGGER.info("Starting Bot !")
     app.run()
-    LOGGER.info('Bot Stopped !')
+    LOGGER.info("Bot Stopped !")
