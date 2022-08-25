@@ -1,3 +1,5 @@
+"""gdrive-bot database."""
+
 import pickle
 import threading
 
