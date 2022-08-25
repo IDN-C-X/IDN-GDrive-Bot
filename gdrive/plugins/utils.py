@@ -18,7 +18,7 @@ from gdrive import SUDO_USERS, DOWNLOAD_DIRECTORY, LOGGER
 def _send_log(client: Client, message: Message):
   with open('log.txt', 'rb') as f:
     try:
-      await client.send_document(
+      client.send_document(
         chat_id=message.chat.id,
         document=f,
         file_name=f.name,
@@ -28,12 +28,12 @@ def _send_log(client: Client, message: Message):
     except FloodWait as e:
       sleep(e.value)
     except RPCError as e:
-      await message.reply_text(e, quote=True)
+      message.reply_text(e, quote=True)
 
 @Client.on_message(filters.private & filters.incoming & filters.command(['restart']) & filters.user(SUDO_USERS), group=2)
 def _restart(client: Client, message: Message):
   shutil.rmtree(DOWNLOAD_DIRECTORY)
   LOGGER.info('Deleted DOWNLOAD_DIRECTORY successfully.')
-  await message.reply_text('**♻️Restarted Successfully !**', quote=True)
+  message.reply_text('**♻️Restarted Successfully !**', quote=True)
   LOGGER.info(f'{message.from_user.id}: Restarting...')
   execl(executable, executable, "-m", "gdrive")
