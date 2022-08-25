@@ -1,3 +1,5 @@
+"""gdrive-bot config setting."""
+
 class config:
     BOT_TOKEN = ""
     APP_ID = ""
