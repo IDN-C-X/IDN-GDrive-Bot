@@ -2,13 +2,13 @@ import pickle
 import threading
 
 from sqlalchemy import Column, Integer, String, LargeBinary
-
+from sqlalchemy.sql.sqltypes import BigInteger
 from gdrive.helpers.sql_helper import BASE, SESSION
 
 
 class gDriveCreds(BASE):
     __tablename__ = "gDrive"
-    chat_id = Column(Integer, primary_key=True)
+    chat_id = Column(BigInteger, primary_key=True)
     credential_string = Column(LargeBinary)
 
 
