@@ -1,3 +1,5 @@
+"""gdrive-bot main init."
+
 import os
 import sys
 import logging
