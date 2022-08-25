@@ -1,3 +1,5 @@
+"""gdrive-bot utilities."""
+
 import os
 import re
 import json
