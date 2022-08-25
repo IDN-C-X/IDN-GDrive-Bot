@@ -1,9 +1,12 @@
+"""download plugins."""
+
 import os
 
 from time import sleep
 
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, RPCError
+from pyrogram.types import Message 
 
 from gdrive import DOWNLOAD_DIRECTORY, LOGGER
 from gdrive.config import Messages, BotCommands
@@ -13,7 +16,7 @@ from gdrive.helpers.utils import CustomFilters, humanbytes
 from gdrive.helpers.downloader import download_file, utube_dl
 
 @Client.on_message(filters.private & filters.incoming & filters.text & (filters.command(BotCommands.Download) | filters.regex('^(ht|f)tp*')) & CustomFilters.auth_users)
-def _download(client, message):
+def _download(client: Client, message: Message):
   if message.media:
     return
   user_id = message.from_user.id
@@ -48,7 +51,7 @@ def _download(client, message):
 
 
 @Client.on_message(filters.private & filters.incoming & (filters.document | filters.audio | filters.video | filters.photo) & CustomFilters.auth_users)
-def _telegram_file(client, message):
+def _telegram_file(client: Client, message: Message):
   user_id = message.from_user.id
   sent_message = message.reply_text('🕵️**Checking File...**', quote=True)
   if message.document:
@@ -60,7 +63,7 @@ def _telegram_file(client, message):
   elif message.photo:
   	file = message.photo
   	file.mime_type = "images/png"
-  	file.file_name = f"IMG-{user_id}-{message.message_id}.png"
+  	file.file_name = f"IMG-{user_id}-{message.id}.png"
   sent_message.edit(Messages.DOWNLOAD_TG_FILE.format(file.file_name, humanbytes(file.file_size), file.mime_type))
   LOGGER.info(f'Download:{user_id}: {file.file_id}')
   try:
@@ -74,7 +77,7 @@ def _telegram_file(client, message):
   os.remove(file_path)
 
 @Client.on_message(filters.incoming & filters.private & filters.command(BotCommands.YtDl) & CustomFilters.auth_users)
-def _ytdl(client, message):
+def _ytdl(client: Client, message: Message):
   user_id = message.from_user.id
   if len(message.command) > 1:
     sent_message = message.reply_text('🕵️**Checking Link...**', quote=True)
