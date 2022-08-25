@@ -1,4 +1,7 @@
+"""set parent plugins."""
+
 from pyrogram import Client, filters
+from pyrogram.types import Message 
 
 from gdrive import LOGGER
 from gdrive.helpers.sql_helper import idsDB
@@ -7,7 +10,7 @@ from gdrive.helpers.utils import CustomFilters
 from gdrive.helpers.gdrive_utils import GoogleDrive
 
 @Client.on_message(filters.private & filters.incoming & filters.command(BotCommands.SetFolder) & CustomFilters.auth_users)
-def _set_parent(client, message):
+def _set_parent(client: Client, message: Message):
   user_id = message.from_user.id
   if len(message.command) > 1:
     link = message.command[1]
