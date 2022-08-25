@@ -1,4 +1,7 @@
+"""delete plugins."""
+
 from pyrogram import Client, filters
+from pyrogram.types import Message 
 
 from gdrive import LOGGER
 from gdrive.config import BotCommands, Messages
@@ -6,7 +9,7 @@ from gdrive.helpers.gdrive_utils import GoogleDrive
 from gdrive.helpers.utils import CustomFilters
 
 @Client.on_message(filters.private & filters.incoming & filters.command(BotCommands.Delete) & CustomFilters.auth_users)
-def _delete(client, message):
+def _delete(client: Client, message: Message):
   user_id = message.from_user.id
   if len(message.command) > 1 or message.reply_to_message:
     sent_message = message.reply_text('🕵️**Checking Link...**', quote=True)
@@ -25,7 +28,7 @@ def _delete(client, message):
 
 
 @Client.on_message(filters.private & filters.incoming & filters.command(BotCommands.EmptyTrash) & CustomFilters.auth_users)
-def _emptyTrash(client, message):
+def _emptyTrash(client: Client, message: Message):
   user_id = message.from_user.id
   LOGGER.info(f'EmptyTrash: {user_id}')
   msg = GoogleDrive(user_id).emptyTrash()
