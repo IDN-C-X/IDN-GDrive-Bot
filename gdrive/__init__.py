@@ -1,4 +1,4 @@
-"""gdrive-bot main init."
+"""gdrive-bot main init."""
 
 import os
 import sys
