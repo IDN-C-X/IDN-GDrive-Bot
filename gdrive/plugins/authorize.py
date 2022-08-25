@@ -1,10 +1,12 @@
+"""authority plugins."""
+
 import re
 import json
 
 from httplib2 import Http
 
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message 
 
 from oauth2client.client import OAuth2WebServerFlow, FlowExchangeError
 
@@ -23,7 +25,7 @@ REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob"
 flow = None
 
 @Client.on_message(filters.private & filters.incoming & filters.command(BotCommands.Authorize))
-async def _auth(client, message):
+async def _auth(client: Client, message: Message):
   user_id = message.from_user.id
   creds = gDriveDB.search(user_id)
   if creds is not None:
@@ -52,18 +54,18 @@ async def _auth(client, message):
       await message.reply_text(f"**ERROR:** ```{e}```", quote=True)
 
 @Client.on_message(filters.private & filters.incoming & filters.command(BotCommands.Revoke) & CustomFilters.auth_users)
-def _revoke(client, message):
+def _revoke(client: Client, message: Message):
   user_id = message.from_user.id
   try:
     gDriveDB._clear(user_id)
     LOGGER.info(f'Revoked:{user_id}')
-    message.reply_text(Messages.REVOKED, quote=True)
+    await message.reply_text(Messages.REVOKED, quote=True)
   except Exception as e:
-    message.reply_text(f"**ERROR:** ```{e}```", quote=True)
+    await message.reply_text(f"**ERROR:** ```{e}```", quote=True)
 
 
 @Client.on_message(filters.private & filters.incoming & filters.text & ~CustomFilters.auth_users)
-async def _token(client, message):
+async def _token(client: Client, message: Message):
   token = message.text.split()[-1]
   WORD = len(token)
   if WORD == 62 and token[1] == "/":
