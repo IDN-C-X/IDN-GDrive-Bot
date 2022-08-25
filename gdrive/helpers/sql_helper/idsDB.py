@@ -1,3 +1,5 @@
+"""gdrive-bot parent id database."""
+
 from sqlalchemy import Column, String, Numeric
 
 from gdrive.helpers.sql_helper import SESSION, BASE
