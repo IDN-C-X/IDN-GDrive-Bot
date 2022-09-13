@@ -24,7 +24,7 @@ try:
     G_DRIVE_CLIENT_ID = os.environ.get("G_DRIVE_CLIENT_ID")
     G_DRIVE_CLIENT_SECRET = os.environ.get("G_DRIVE_CLIENT_SECRET")
   else:
-    from bot.config import config
+    from gdrive.config import config
     BOT_TOKEN = config.BOT_TOKEN
     APP_ID = config.APP_ID
     API_HASH = config.API_HASH
