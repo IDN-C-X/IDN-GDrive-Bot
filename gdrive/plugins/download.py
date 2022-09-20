@@ -105,10 +105,10 @@ def _telegram_file(client: Client, message: Message):
     & CustomFilters.auth_users
 )
 def _ytdl(client: Client, message: Message):
-    user_id = message.from_user.id
     if len(message.command) > 1:
         sent_message = message.reply_text("🕵️**Checking Link...**", quote=True)
         link = message.command[1]
+        user_id = message.from_user.id
         LOGGER.info(f"YTDL:{user_id}: {link}")
         sent_message.edit(Messages.DOWNLOADING.format(link))
         result, file_path = utube_dl(link)

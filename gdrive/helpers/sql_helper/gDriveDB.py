@@ -47,7 +47,6 @@ def search(chat_id):
 
 def _clear(chat_id):
     with INSERTION_LOCK:
-        saved_cred = SESSION.query(gDriveCreds).get(chat_id)
-        if saved_cred:
+        if saved_cred := SESSION.query(gDriveCreds).get(chat_id):
             SESSION.delete(saved_cred)
             SESSION.commit()

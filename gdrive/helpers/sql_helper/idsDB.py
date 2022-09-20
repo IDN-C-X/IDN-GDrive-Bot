@@ -40,7 +40,6 @@ def _set(chat_id, parent_id):
 
 
 def _clear(chat_id):
-    rem = SESSION.query(ParentID).get(chat_id)
-    if rem:
+    if rem := SESSION.query(ParentID).get(chat_id):
         SESSION.delete(rem)
         SESSION.commit()

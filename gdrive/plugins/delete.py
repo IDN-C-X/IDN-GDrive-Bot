@@ -16,7 +16,6 @@ from gdrive.helpers.utils import CustomFilters
     & CustomFilters.auth_users
 )
 def _delete(client: Client, message: Message):
-    user_id = message.from_user.id
     if len(message.command) > 1 or message.reply_to_message:
         sent_message = message.reply_text("🕵️**Checking Link...**", quote=True)
         if len(message.command) > 1:
@@ -28,6 +27,7 @@ def _delete(client: Client, message: Message):
                 Messages.PROVIDE_GDRIVE_URL.format(BotCommands.Delete[0]), quote=True
             )
             return
+        user_id = message.from_user.id
         LOGGER.info(f"Delete:{user_id}: {link}")
         result = GoogleDrive(user_id).delete_file(link)
         sent_message.edit(result)
