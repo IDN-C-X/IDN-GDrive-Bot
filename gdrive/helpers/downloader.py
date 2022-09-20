@@ -41,19 +41,24 @@ def utube_dl(link):
             meta = ytdl.extract_info(link, download=True)
         except DownloadError as e:
             return False, str(e)
-        for path in glob.glob(os.path.join(DOWNLOAD_DIRECTORY, "*")):
-            if path.endswith(
-                (
-                    ".avi",
-                    ".mov",
-                    ".flv",
-                    ".wmv",
-                    ".3gp",
-                    ".mpeg",
-                    ".webm",
-                    ".mp4",
-                    ".mkv",
+        return next(
+            (
+                (True, path)
+                for path in glob.glob(os.path.join(DOWNLOAD_DIRECTORY, "*"))
+                if path.endswith(
+                    (
+                        ".avi",
+                        ".mov",
+                        ".flv",
+                        ".wmv",
+                        ".3gp",
+                        ".mpeg",
+                        ".webm",
+                        ".mp4",
+                        ".mkv",
+                    )
                 )
-            ) and path.startswith(ytdl.prepare_filename(meta)):
-                return True, path
-        return False, "Something went wrong! No video file exists on server."
+                and path.startswith(ytdl.prepare_filename(meta))
+            ),
+            (False, "Something went wrong! No video file exists on server."),
+        )

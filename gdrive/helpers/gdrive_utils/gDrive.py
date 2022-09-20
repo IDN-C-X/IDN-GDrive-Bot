@@ -41,7 +41,7 @@ class GoogleDrive:
             res = re.search(regex, link)
             if res is None:
                 raise IndexError("GDrive ID not found.")
-            return res.group(5)
+            return res[5]
         parsed = urlparse.urlparse(link)
         return parse_qs(parsed.query)["id"][0]
 
@@ -69,8 +69,7 @@ class GoogleDrive:
                 )
                 .execute()
             )
-            for file in response.get("files", []):
-                files.append(file)
+            files.extend(iter(response.get("files", [])))
             page_token = response.get("nextPageToken", None)
             if page_token is None:
                 break
