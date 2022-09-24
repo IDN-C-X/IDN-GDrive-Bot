@@ -21,4 +21,8 @@ def start() -> scoped_session:
 
 
 BASE = declarative_base()
-SESSION = start()
+try:
+    SESSION: scoped_session = start()
+except Exception as e:
+    LOGGER.error(f"Failed to connect to DATABASE_URL: {e}")
+    sys.exit()
