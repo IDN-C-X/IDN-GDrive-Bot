@@ -1,8 +1,11 @@
+"""gdrive-bot database."""
+
 import pickle
 import threading
 
-from sqlalchemy import Column, Integer, String, LargeBinary
+from sqlalchemy import Column, LargeBinary
 from sqlalchemy.sql.sqltypes import BigInteger
+
 from gdrive.helpers.sql_helper import BASE, SESSION
 
 
@@ -11,7 +14,6 @@ class gDriveCreds(BASE):
     chat_id = Column(BigInteger, primary_key=True)
     credential_string = Column(LargeBinary)
 
-
     def __init__(self, chat_id):
         self.chat_id = chat_id
 
@@ -19,6 +21,7 @@ class gDriveCreds(BASE):
 gDriveCreds.__table__.create(checkfirst=True)
 
 INSERTION_LOCK = threading.RLock()
+
 
 def _set(chat_id, credential_string):
     with INSERTION_LOCK:
@@ -44,7 +47,6 @@ def search(chat_id):
 
 def _clear(chat_id):
     with INSERTION_LOCK:
-        saved_cred = SESSION.query(gDriveCreds).get(chat_id)
-        if saved_cred:
+        if saved_cred := SESSION.query(gDriveCreds).get(chat_id):
             SESSION.delete(saved_cred)
             SESSION.commit()
